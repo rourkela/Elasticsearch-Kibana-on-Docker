@@ -1,0 +1,36 @@
+version: '2.2'
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    container_name: elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 53730:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.4
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_URL: "http://localhost:53730"
+    ports:
+      - 53731:5601
+    depends_on:
+      - elasticsearch
+
+volumes:
+  esdata1:
+    driver: local
+    
+    
+* Use curl command to check the container is up or not - 1) curl -v http://localhost:9200 (ELK)
+                                                         2)  curl -v http://localhost:5601   (KIBANA)
+                                                         
