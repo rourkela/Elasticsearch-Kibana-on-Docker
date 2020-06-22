@@ -1,0 +1,23 @@
+docker ps -f "status=exited"                ->  to show only exited container
+docker ps -a --filter "status=exited" -q     -> to find out the id of exited container
+docker ps --format '{{.Names}}'              -> to see the name of active container   
+docker ps -a --format '{{.Names}}'           -> To see the name of both up and exited container
+
+docker ps -a --format "table {{.Names}}" --filter=status=exited ->  To see the name of the exited container
+                                                                  with the column name as "Names"(Heading).
+docker ps -a --format "{{.Names}}" --filter=status=exited  -> To see the name of the exited container only
+                                                           without any headings . 
+docker ps -a --format "table {{.Names}}" --filter=status=exited > listings  :-   It will show the name 
+                                                 of the exited container and redirect in a File namely(listing).
+cat listings    -> To see the content of the file namely (listing).
+docker network prune    - > To clear all containers
+docker ps -> To Check all running containers .
+        REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+        test_mysql           latest              791b6e40940c        3 months ago        484MB
+ docker rmi test_mysql:latest  -> To remove image
+docker-machine ip default   ->    To know the Ip
+docker network ls    -> To show the container id ,driver and scope 
+docker network inspect 8097bb970b2b<Network id>  :- To get the detains of the cotainer 
+docker run -dit docker.elastic.co/kibana/kibana:6.5.4 bash ->   To run the container
+docker container ls ->               to see the running container 
+docker network inspect bridge    ->              to see the details 
