@@ -1,0 +1,55 @@
+1)⛳ To bring up Prometheus,CAdvisor and Grafana container write 2 yml files ,
+docker-compose.yml and prometheus.yml .both the files should be in same directory .
+Then give cmd -: docker-compose up -d , docker ps 
+Use :- curl -v http://localhost:9999 to check prometheus is up .
+
+✅docker-compose.yml 
+==========================
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: monitoring_prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9999:9090
+    depends_on:
+    - cadvisor
+      
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: monitoring_cadvisor
+    restart: unless-stopped
+    volumes:
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+    - 8888:8080
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: unless-stopped
+    depends_on:
+        - prometheus
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    ports:
+    - 3333:3000
+    
+   ✅ prometheus.yml 
+    ================
+    global:
+  scrape_interval: 5s
+  external_labels:
+    monitor: 'my-monitor'
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9999']
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['localhost:8888']
